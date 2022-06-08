@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: server-boilerplate
+  name: account-manager
   labels:
-    app: server-boilerplate
+    app: account-manager
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: server-boilerplate
+      app: account-manager
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -17,10 +17,10 @@ spec:
   template:
     metadata:
       labels:
-        app: server-boilerplate
+        app: account-manager
     spec:
       containers:
-      - name: server-boilerplate
+      - name: account-manager
         image: <IMAGE>
         ports:
         - containerPort: 3000
@@ -34,9 +34,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: server-boilerplate-service
+  name: account-manager-service
   labels:
-    app: server-boilerplate-service
+    app: account-manager-service
 spec:
   type: LoadBalancer
   ports:
@@ -45,4 +45,4 @@ spec:
       port: 3000
       targetPort: sbp-port
   selector:
-    app: server-boilerplate
+    app: account-manager
