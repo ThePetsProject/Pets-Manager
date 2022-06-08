@@ -38,11 +38,9 @@ metadata:
   labels:
     app: account-manager-service
 spec:
-  # type: LoadBalancer
   ports:
-    - name: http
-      protocol: TCP
-      port: 3000
-      targetPort: sbp-port
+  - port: 3000
+    name: http
+    targetPort: 3000
   selector:
     app: account-manager
