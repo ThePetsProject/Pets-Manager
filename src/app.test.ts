@@ -4,7 +4,7 @@ import app from './app'
 describe('Test the api paths', () => {
   it('It should response the GET method for api/example with 200 code', (done) => {
     request(app)
-      .get('/api/v1/example')
+      .get('/api/v1/account/example')
       .then((response) => {
         expect(response.statusCode).toBe(200)
         done()
