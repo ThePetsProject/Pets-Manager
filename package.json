@@ -1,7 +1,7 @@
 {
-  "name": "server-boilerplate",
+  "name": "account-manager",
   "version": "0.0.1",
-  "description": "Server boilerplate for The Pets Project",
+  "description": "Account manager for The Pets Project",
   "main": "build/index.js",
   "namespace": "tpp",
   "scripts": {
@@ -16,7 +16,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ThePetsProject/server-boilerplate.git"
+    "url": "git+https://github.com/ThePetsProject/Account-Manager.git"
   },
   "author": "Javier Novoa",
   "license": "ISC",

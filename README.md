@@ -1,2 +1,3 @@
-# server-boilerplate
-ThePets Project server boilerplate
+# Account manager
+
+Accounts

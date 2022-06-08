@@ -45,5 +45,5 @@ jobs:
       run: kubectl apply -f $GITHUB_WORKSPACE/config/deployment.yml
 
     - name: Verify deployment
-      run: kubectl rollout status deployment/server-boilerplate
+      run: kubectl rollout status deployment/account-manager
       
