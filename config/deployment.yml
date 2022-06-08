@@ -42,7 +42,7 @@ spec:
   ports:
     - name: http
       protocol: TCP
-      port: 3000
+      port: 80
       targetPort: sbp-port
   selector:
     app: account-manager
