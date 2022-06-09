@@ -1,7 +1,7 @@
 {
-  "name": "account-manager",
+  "name": "account-login-manager",
   "version": "0.0.1",
-  "description": "Account manager for The Pets Project",
+  "description": "Account login manager for The Pets Project",
   "main": "build/index.js",
   "namespace": "tpp",
   "scripts": {
@@ -16,7 +16,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ThePetsProject/Account-Manager.git"
+    "url": "git+https://github.com/ThePetsProject/Account-Login-Manager.git"
   },
   "author": "Javier Novoa",
   "license": "ISC",
