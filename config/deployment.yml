@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: account-manager
+  name: account-login-manager
   labels:
-    app: account-manager
+    app: account-login-manager
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: account-manager
+      app: account-login-manager
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -17,13 +17,13 @@ spec:
   template:
     metadata:
       labels:
-        app: account-manager
+        app: account-login-manager
     spec:
       containers:
-      - name: account-manager
+      - name: account-login-manager
         image: <IMAGE>
         ports:
-        - containerPort: 3000
+        - containerPort: 3100
           name: sbp-port
         resources:
           requests:
@@ -34,13 +34,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: account-manager-service
+  name: account-login-manager-service
   labels:
-    app: account-manager-service
+    app: account-login-manager-service
 spec:
   ports:
-  - port: 3000
+  - port: 3100
     name: http
-    targetPort: 3000
+    targetPort: 3100
   selector:
-    app: account-manager
+    app: account-login-manager
