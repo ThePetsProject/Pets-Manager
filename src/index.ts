@@ -1,9 +1,10 @@
 import app from './app'
-import displayRoutes from 'express-routemap'
+import { mongoConnect } from './infrastructure/database/connect'
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3100
 
-app.listen(port, () => {
-  console.log(`server is listening on ${port}`)
-  displayRoutes(app)
+mongoConnect().then(() => {
+  app.listen(port, async () => {
+    console.log(`server is listening on ${port}`)
+  })
 })

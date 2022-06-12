@@ -24,6 +24,9 @@
       "@src/*": [
         "src/*"
       ],
+      "@database/*": [
+        "src/infrastructure/database/*"
+      ],
       "@utils/*": [
         "src/utils/*"
       ]

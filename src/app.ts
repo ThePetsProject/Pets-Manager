@@ -8,6 +8,6 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-app.use('/api/v1/account', routes)
+app.use('/api/v1/account/login', routes)
 
 export default app
