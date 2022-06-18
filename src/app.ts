@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { routesArray } from './routes'
+import { routesArray } from './infrastructure/routes'
 
 const app = express()
 const router = express.Router()

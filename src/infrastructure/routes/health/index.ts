@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import projectProperties from '@utils/project_properties'
 
 export type HealthRouteFnType = (router: Router) => Router
@@ -13,10 +13,7 @@ export const formatTime = (seconds: number) => {
   return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
 }
 
-export const healthHandler = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const healthHandler = (res: Response): Response => {
   const healthMessage = {
     status: 'UP',
     up_time: formatTime(process.uptime()),
@@ -29,4 +26,4 @@ export const healthHandler = async (
 }
 
 export const healthRoute: HealthRouteFnType = (router: Router): Router =>
-  router.get('/health/', (req, res) => healthHandler(req, res))
+  router.get('/health', (req, res) => healthHandler(res))

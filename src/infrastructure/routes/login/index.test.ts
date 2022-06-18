@@ -1,30 +1,45 @@
-import * as loginMethods from '.'
-import { User } from '../../infrastructure/database/models/user'
-import express, { Request, Response } from 'express'
+import supertest from 'supertest'
+import app from '../../../app'
+import * as loginModules from '.'
+import { User } from '../../database/models/user'
+import { Request, Response } from 'express'
 
-jest.mock('express', () => ({
-  Router: () => ({
-    post: jest.fn().mockImplementation(() => {}),
-  }),
-}))
-
-const router = express.Router()
-const { loginRoute, loginHandler } = loginMethods
+const baseRoute = '/api/v1/account/login'
+const { loginHandler } = loginModules
 
 describe('Login route', () => {
-  it('Should call method when root', async () => {
-    jest
-      .spyOn(loginMethods, 'loginHandler')
-      .mockResolvedValueOnce({} as Response)
-    loginRoute(router, User)
-    expect(router.post).toHaveBeenCalledWith('/', expect.any(Function))
+  let request: supertest.SuperTest<supertest.Test>
+
+  beforeAll(() => {
+    request = supertest(app)
   })
 
-  it('Should respond 200 when password match', async () => {
+  beforeEach(() => {
     User.findOne = jest.fn().mockResolvedValueOnce({
       checkPassword: jest.fn().mockResolvedValueOnce(true),
     })
+  })
 
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
+  it('Should call method when root path', (done) => {
+    jest.spyOn(loginModules, 'loginHandler')
+    request
+      .post(`${baseRoute}/`)
+      .send({
+        email: 'fake@email.com',
+        password: 'fakepwd',
+      })
+      .expect(200)
+      .then(() => {
+        expect(loginModules.loginHandler).toHaveBeenCalled()
+        done()
+      })
+  })
+
+  it('Should respond 200 when password match', async () => {
     const req = {
       body: {
         email: 'fake@email.com',

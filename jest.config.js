@@ -24,6 +24,8 @@ module.exports = {
     '**/*.{ts,tsx}',
     '**/infrastructure/**',
     '**/infrastructure/database/**',
+    '!**/infrastructure/database/connect.ts',
+    '!**/infrastructure/database/models/**',
     '!./src/routes/health/**',
     '!**/node_modules/**',
     '!./index.ts',
