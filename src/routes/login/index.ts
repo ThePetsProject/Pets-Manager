@@ -34,4 +34,6 @@ export const loginHandler = async (
 export const loginRoute: LoginRouteFnType = (
   router: Router,
   user: mongoose.Model<UserType>
-): Router => router.post('/', (req, res) => loginHandler(user, req, res))
+): Router => {
+  return router.post('/', (req, res) => loginHandler(user, req, res))
+}

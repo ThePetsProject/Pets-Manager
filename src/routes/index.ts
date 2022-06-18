@@ -1,5 +1,5 @@
 import { loginRoute } from './login'
-import express from 'express'
+import { Router } from 'express'
 import { User } from '@database/models/user'
 
 const router = express.Router()
@@ -9,4 +9,6 @@ const router = express.Router()
  */
 router.use(loginRoute(router, User))
 
-export default router
+export const routesArray = (router: Router) => [
+  loginRoute(router, User),
+]
