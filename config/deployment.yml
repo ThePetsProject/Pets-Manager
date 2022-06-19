@@ -5,7 +5,7 @@ metadata:
   labels:
     app: account-login-manager
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: account-login-manager
@@ -29,15 +29,15 @@ spec:
           requests:
             cpu: 100m
           limits:
-            cpu: 100m
+            cpu: 300m
         volumeMounts:
         - name: mongo-ca-certificate
           mountPath: "/etc/certs"
           readOnly: true
       volumes:
       - name: mongo-ca-certificate
-        configMap:
-          name: mongo-ca-certificate.cer
+        secret:
+          secretName: mongo-ca-certificate.cer
 ---
 apiVersion: v1
 kind: Service
