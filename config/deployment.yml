@@ -35,9 +35,9 @@ spec:
           mountPath: "/etc/certs"
           readOnly: true
       volumes:
-      - name: mongo-ca-certificate
+      - name: mongo-ca-certificate.cer
         secret:
-          secretName: mongo-ca-certificate.cer
+          secretName: mongo-ca-certificate
 ---
 apiVersion: v1
 kind: Service
