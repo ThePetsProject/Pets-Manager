@@ -1,7 +1,7 @@
 import app from './app'
 import { mongoConnect } from './infrastructure/database/connect'
 
-const port = process.env.PORT || 3100
+const port = process.env.PORT
 
 mongoConnect().then(() => {
   app.listen(port, async () => {
