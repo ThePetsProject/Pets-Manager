@@ -4,6 +4,10 @@ metadata:
   name: account-login-manager
   labels:
     app: account-login-manager
+  annotations:
+    vault.hashicorp.com/agent-inject: 'true'
+    vault.hashicorp.com/role: 'account-login-manager'
+    vault.hashicorp.com/agent-inject-secret-database-config.txt: 'kv/data/account-login-manager/production'
 spec:
   replicas: 1
   selector:
@@ -45,12 +49,6 @@ spec:
       - name: mongo-ca-certificate
         secret:
           secretName: mongo-ca-certificate.cer
-      template:
-        metadata:
-          annotations:
-            vault.hashicorp.com/agent-inject: 'true'
-            vault.hashicorp.com/role: 'account-login-manager'
-            vault.hashicorp.com/agent-inject-secret-database-config.txt: 'kv/data/account-login-manager/production'
 ---
 apiVersion: v1
 kind: Service
