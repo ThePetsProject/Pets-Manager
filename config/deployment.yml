@@ -19,7 +19,7 @@ spec:
       labels:
         app: account-login-manager
     spec:
-      # serviceAccountName: account-login-manager-service-account
+      serviceAccountName: account-login-manager-service-account
       containers:
       - name: account-login-manager
         image: <IMAGE>
