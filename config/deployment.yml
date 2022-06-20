@@ -39,10 +39,10 @@ spec:
           name: sbp-port
         resources:
           requests:
-            cpu: 100m
+            cpu: 200m
             memory: 256Mi
           limits:
-            cpu: 300m
+            cpu: 400m
             memory: 512Mi
         volumeMounts:
         - name: mongo-ca-certificate
