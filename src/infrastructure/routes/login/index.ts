@@ -2,6 +2,7 @@ import { UserType } from '@src/infrastructure/database/models/user'
 import { Router } from 'express'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
+import Joi from 'joi'
 
 export type LoginRouteFnType = (
   router: Router,
@@ -14,18 +15,26 @@ export const loginHandler = async (
   res: Response
 ): Promise<Response> => {
   const { email, password } = req.body
+
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  })
+
+  const { error, value } = schema.validate({ email, password })
+
+  if (error) return res.status(400).send()
+
   const userExists = await user.findOne({
     email: email.toLowerCase().trim(),
   })
 
-  if (!userExists) {
-    return res.status(400).send()
-  }
+  if (!userExists) return res.status(404).send()
 
   const pwdCheck = await userExists.checkPassword(password)
 
   if (!pwdCheck) {
-    return res.status(400).send()
+    return res.status(401).send()
   }
 
   return res.status(200).send()
