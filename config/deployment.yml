@@ -38,7 +38,7 @@ spec:
       volumes:
       - name: mongo-ca-certificate
         secret:
-          secretName: mongo-ca-certificate
+          secretName: mongo-ca-certificate.cer
 ---
 apiVersion: v1
 kind: Service
