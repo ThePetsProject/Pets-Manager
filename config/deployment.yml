@@ -32,13 +32,13 @@ spec:
           limits:
             cpu: 300m
         volumeMounts:
-        - name: mongo-ca-certificate.cer
+        - name: mongo-ca-certificate
           mountPath: "/etc/certs"
           readOnly: true
       volumes:
-      - name: mongo-ca-certificate.cer
+      - name: mongo-ca-certificate
         secret:
-          secretName: mongo-ca-certificate.cer
+          secretName: mongo-ca-certificate
 ---
 apiVersion: v1
 kind: Service
