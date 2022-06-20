@@ -21,9 +21,10 @@ spec:
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/role: 'account-login-manager'
-        vault.hashicorp.com/agent-inject-secret-mongostring.txt: |
+        vault.hashicorp.com/agent-inject-secret-mongostring.txt: 'kv/data/account-login-manager/production'
+        vault.hashicorp.com/agent-inject-template-mongostring.txt: |
           {{- with secret "kv/data/account-login-manager/production" -}}
-          {{ ".Data.data.theTest" }}
+          {{ ".Data.data.mongoString" }}
           {{- end -}}
     spec:
       serviceAccountName: account-login-manager-service-account
