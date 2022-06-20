@@ -23,7 +23,10 @@ export const loginHandler = async (
 
   const { error, value } = schema.validate({ email, password })
 
-  if (error) return res.status(400).send()
+  if (error) {
+    console.log(JSON.stringify(error))
+    return res.status(400).send()
+  }
 
   const userExists = await user.findOne({
     email: email.toLowerCase().trim(),
