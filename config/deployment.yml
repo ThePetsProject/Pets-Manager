@@ -4,10 +4,6 @@ metadata:
   name: account-login-manager
   labels:
     app: account-login-manager
-  annotations:
-    vault.hashicorp.com/agent-inject: 'true'
-    vault.hashicorp.com/role: 'account-login-manager'
-    vault.hashicorp.com/agent-inject-secret-database-config.txt: 'kv/data/account-login-manager/production'
 spec:
   replicas: 1
   selector:
@@ -22,6 +18,10 @@ spec:
     metadata:
       labels:
         app: account-login-manager
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/role: 'account-login-manager'
+        vault.hashicorp.com/agent-inject-secret-mongostring.txt: 'kv/data/account-login-manager/production'
     spec:
       serviceAccountName: account-login-manager-service-account
       containers:
