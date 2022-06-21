@@ -22,7 +22,7 @@ export const loginHandler = async (
 ): Promise<Response> => {
   const { email, password } = req.body
 
-  console.error(`[ACC-LOGIN-MANAGER][DELETEME][EMAIL] ${email}`)
+  console.info(`[ACC-LOGIN-MANAGER] Trying login for ${email}`)
 
   const schema = Joi.object({
     email: Joi.string().email().required(),
@@ -30,8 +30,6 @@ export const loginHandler = async (
   })
 
   const { error, value } = schema.validate({ email, password })
-
-  console.error(`[ACC-LOGIN-MANAGER][DELETEME][SCHEMAVALUE] ${value}`)
 
   if (error) {
     console.error(
@@ -44,16 +42,23 @@ export const loginHandler = async (
     email: email.toLowerCase().trim(),
   })
 
-  if (!userExists) return res.status(404).send()
+  if (!userExists) {
+    console.error(
+      `[ACC-LOGIN-MANAGER][USER_ERROR][USER_NOT_FOUND] User ${email} not found`
+    )
+    return res.status(404).send()
+  }
 
   const pwdCheck = await userExists.checkPassword(password)
 
   if (!pwdCheck) {
+    console.error(
+      `[ACC-LOGIN-MANAGER][USER_ERROR][WRONG_PASSWORD] Wrong password for ${email}`
+    )
     return res.status(401).send()
   }
 
   const jwtUrl = `${process.env.JWT_MANAGER_URL}/${process.env.JWT_MANAGER_SET_PATH}`
-  console.log(jwtUrl)
 
   const axiosConfig = {
     method: 'post',
