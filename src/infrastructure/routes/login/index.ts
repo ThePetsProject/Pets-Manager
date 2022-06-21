@@ -22,6 +22,8 @@ export const loginHandler = async (
 ): Promise<Response> => {
   const { email, password } = req.body
 
+  console.error(`[ACC-LOGIN-MANAGER][DELETEME][EMAIL] ${email}`)
+
   const schema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
@@ -29,8 +31,12 @@ export const loginHandler = async (
 
   const { error, value } = schema.validate({ email, password })
 
+  console.error(`[ACC-LOGIN-MANAGER][DELETEME][SCHEMAVALUE] ${value}`)
+
   if (error) {
-    console.error(`[ACC-LOGIN-MANAGER][ERROR][ERROR_MESSAGE] ${error.message}`)
+    console.error(
+      `[ACC-LOGIN-MANAGER][SCHEMA_ERROR][ERROR_MESSAGE] ${error.message}`
+    )
     return res.status(400).send()
   }
 
@@ -46,7 +52,7 @@ export const loginHandler = async (
     return res.status(401).send()
   }
 
-  const jwtUrl = `${process.env.JWT_MANAGER_URL}/${process.env.JWT_MANAGER_SET_PATH}`
+  const jwtUrl = `http://${process.env.JWT_MANAGER_URL}/${process.env.JWT_MANAGER_SET_PATH}`
   console.log(jwtUrl)
 
   const axiosConfig = {
@@ -67,9 +73,11 @@ export const loginHandler = async (
     })
     .catch((error: AxiosError) => {
       console.error(
-        `[ACC-LOGIN-MANAGER][ERROR][ERROR_MESSAGE] ${error.message}`
+        `[ACC-LOGIN-MANAGER][AXIOS_ERROR][ERROR_MESSAGE] ${error.message}`
       )
-      console.error(`[ACC-LOGIN-MANAGER][ERROR][ERROR_CODE] ${error.code}`)
+      console.error(
+        `[ACC-LOGIN-MANAGER][AXIOS_ERROR][ERROR_CODE] ${error.code}`
+      )
       return res.status(500).send({
         message: error.message,
       })
