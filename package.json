@@ -1,6 +1,6 @@
 {
   "name": "account-login-manager",
-  "version": "1.0.0",
+  "version": "1.0.1a",
   "description": "Account login manager for The Pets Project",
   "main": "build/index.js",
   "namespace": "tpp",
