@@ -38,7 +38,7 @@ spec:
           - name: MONGO_STRING_FILE_PATH
             value: /vault/secrets/
         ports:
-        - containerPort: 3100
+        - containerPort: 80
           name: sbp-port
         resources:
           requests:
@@ -64,7 +64,7 @@ metadata:
     app: account-login-manager-service
 spec:
   ports:
-  - port: 3100
+  - port: 80
     name: http
     targetPort: 3100
   selector:
