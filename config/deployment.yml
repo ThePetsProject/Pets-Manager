@@ -1,3 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-login-manager-service
+  labels:
+    app: account-login-manager-service
+spec:
+  ports:
+  - port: 80
+    name: http
+    targetPort: 3100
+  selector:
+    app: account-login-manager
+---
+apiVersion: v1
+imagePullSecrets:
+- name: tpp-registry
+kind: ServiceAccount
+metadata:
+  name: account-login-manager-service-account
+  namespace: default
+---    
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -59,17 +81,3 @@ spec:
       - name: mongo-ca-certificate
         secret:
           secretName: mongo-ca-certificate.cer
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: account-login-manager-service
-  labels:
-    app: account-login-manager-service
-spec:
-  ports:
-  - port: 80
-    name: http
-    targetPort: 3100
-  selector:
-    app: account-login-manager
