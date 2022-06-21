@@ -3,6 +3,12 @@ import { Router } from 'express'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
 import Joi from 'joi'
+import axios, { AxiosError } from 'axios'
+
+interface JwtResponse {
+  accToken: string
+  refToken: string
+}
 
 export type LoginRouteFnType = (
   router: Router,
@@ -24,7 +30,7 @@ export const loginHandler = async (
   const { error, value } = schema.validate({ email, password })
 
   if (error) {
-    console.log(JSON.stringify(error))
+    console.error(`[ACC-LOGIN-MANAGER][ERROR][ERROR_MESSAGE] ${error.message}`)
     return res.status(400).send()
   }
 
@@ -39,6 +45,35 @@ export const loginHandler = async (
   if (!pwdCheck) {
     return res.status(401).send()
   }
+
+  const jwtUrl = `${process.env.JWT_MANAGER_URL}/${process.env.JWT_MANAGER_SET_PATH}`
+  console.log(jwtUrl)
+
+  const axiosConfig = {
+    method: 'post',
+    url: jwtUrl,
+    data: {
+      email,
+    },
+  }
+  return axios
+    .request<JwtResponse>(axiosConfig)
+    .then((response) => {
+      const { accToken, refToken } = response.data
+      return res.status(200).send({
+        accToken,
+        refToken,
+      })
+    })
+    .catch((error: AxiosError) => {
+      console.error(
+        `[ACC-LOGIN-MANAGER][ERROR][ERROR_MESSAGE] ${error.message}`
+      )
+      console.error(`[ACC-LOGIN-MANAGER][ERROR][ERROR_CODE] ${error.code}`)
+      return res.status(500).send({
+        message: error.message,
+      })
+    })
 
   return res.status(200).send()
 }
