@@ -52,7 +52,7 @@ export const loginHandler = async (
     return res.status(401).send()
   }
 
-  const jwtUrl = `http://${process.env.JWT_MANAGER_URL}/${process.env.JWT_MANAGER_SET_PATH}`
+  const jwtUrl = `${process.env.JWT_MANAGER_URL}/${process.env.JWT_MANAGER_SET_PATH}`
   console.log(jwtUrl)
 
   const axiosConfig = {

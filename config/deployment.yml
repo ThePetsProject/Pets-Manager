@@ -60,7 +60,7 @@ spec:
           - name: MONGO_STRING_FILE_PATH
             value: /vault/secrets/
           - name: JWT_MANAGER_URL
-            value: jwt-manager-service
+            value: http://jwt-manager-service
           - name: JWT_MANAGER_SET_PATH
             value: api/v1/jwt
         ports:
