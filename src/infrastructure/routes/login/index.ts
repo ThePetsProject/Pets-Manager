@@ -87,8 +87,6 @@ export const loginHandler = async (
         message: error.message,
       })
     })
-
-  return res.status(200).send()
 }
 
 export const loginRoute: LoginRouteFnType = (

@@ -52,6 +52,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "husky": "^8.0.1",
     "jest": "^28.1.0",
+    "jest-mock-axios": "^4.6.1",
     "jest-mock-extended": "^2.0.6",
     "jest-when": "^3.5.1",
     "mockingoose": "^2.15.2",
