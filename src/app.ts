@@ -1,5 +1,5 @@
 import express from 'express'
-import cors from 'cors'
+import cors, { CorsOptions } from 'cors'
 import { routesArray } from './infrastructure/routes'
 import dotenv from 'dotenv'
 
@@ -7,6 +7,11 @@ dotenv.config()
 
 const app = express()
 const router = express.Router()
+
+const corsOptions: CorsOptions = {
+  origin: 'https://thepetsproject.tk',
+  optionsSuccessStatus: 200,
+}
 
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))
