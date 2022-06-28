@@ -7,6 +7,7 @@ export const mongoConnect = async (): Promise<string> => {
   const mongoString = fs
     .readFileSync(`${mongoStrinfFilePath}mongostring.txt`)
     .toString()
+  console.log('mongoString', mongoString)
   return new Promise((resolve, reject) => {
     mongoose.connect(mongoString, mongooseOptions).then(
       () => {
