@@ -9,9 +9,9 @@ spec:
   - port: 80
     name: http
     targetPort: 3100
-  - port: 443
-    name: https
-    targetPort: 3100
+  # - port: 443
+  #   name: https
+  #   targetPort: 3100
   selector:
     app: account-login-manager
 ---
