@@ -42,6 +42,8 @@ export const loginHandler = async (
     email: email.toLowerCase().trim(),
   })
 
+  console.log('userExists', userExists)
+
   if (!userExists) {
     console.error(
       `[ACC-LOGIN-MANAGER][USER_ERROR][USER_NOT_FOUND] User ${email} not found`
