@@ -59,12 +59,12 @@ describe('Health route', () => {
 describe('Format time', (): void => {
   let timeFormat: string
   const timeLessOptions = [
-    { value: 3600, expected: '01:00:00' },
+    { value: 3300, expected: '01:00:00' },
     { value: 60, expected: '00:01:00' },
     { value: 1, expected: '00:00:01' },
   ]
   const timeGreaterOptions = [
-    { value: 36000, expected: '10:00:00' },
+    { value: 33000, expected: '10:00:00' },
     { value: 600, expected: '00:10:00' },
     { value: 10, expected: '00:00:10' },
   ]

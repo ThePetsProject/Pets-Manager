@@ -1,15 +1,18 @@
 import supertest from 'supertest'
 import app from '../../../app'
-import * as loginModules from '.'
+import * as setPetModules from '.'
 import { User } from '../../database/models/user'
-import { Request, Response } from 'express'
-import axios, { AxiosError } from 'axios'
+import { Pet } from '../../database/models/pet'
+import { NextFunction, Request, Response } from 'express'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
+import validateJwt from '@src/infrastructure/middlewares/jwt'
+import { set } from 'lodash'
 
 jest.mock('axios')
 const mockedAxios = axios as jest.Mocked<typeof axios>
 
-const baseRoute = '/api/v1/account/login'
-const { loginHandler } = loginModules
+const baseRoute = '/api/v1/pets/secure'
+const { setPetsHandler } = setPetModules
 
 jest.spyOn(global.console, 'error').mockImplementation(() => {})
 jest.spyOn(global.console, 'info').mockImplementation(() => {})
@@ -19,11 +22,14 @@ const responseTokens = {
   refToken: 'fakereftoken',
 }
 const mockTokensResponse = () =>
-  mockedAxios.request.mockResolvedValueOnce({
-    data: responseTokens,
-  })
+  mockedAxios.request.mockImplementation(
+    (config: AxiosRequestConfig<unknown>) => {
+      console.log(config)
+      return Promise.resolve()
+    }
+  )
 
-describe('Login route', () => {
+describe('Set pet route', () => {
   let request: supertest.SuperTest<supertest.Test>
 
   beforeAll(() => {
@@ -40,19 +46,26 @@ describe('Login route', () => {
     jest.resetAllMocks()
   })
 
-  it('Should call method when root path', (done) => {
-    jest.spyOn(loginModules, 'loginHandler')
+  it.only('Should call method when root path', (done) => {
+    jest.spyOn(setPetModules, 'setPetsHandler')
     mockTokensResponse()
 
     request
       .post(`${baseRoute}/`)
       .send({
-        email: 'fake@email.com',
-        password: 'fakepwd',
+        accountId: 'fake',
+        microchipId: 'fake',
+        name: 'fake',
+        color: 'fake',
+        age: 'fake',
+        species: 'fake',
+        breed: 'fake',
+        size: 'fake',
+        description: 'fake',
       })
       .expect(200)
       .then(() => {
-        expect(loginModules.loginHandler).toHaveBeenCalled()
+        expect(setPetModules.setPetsHandler).toHaveBeenCalled()
         done()
       })
   })
@@ -72,7 +85,7 @@ describe('Login route', () => {
       status: jest.fn().mockReturnThis(),
     } as any as Response
 
-    const loginResponse = await loginHandler(User, req, res)
+    const loginResponse = await setPetsHandler(User, Pet, req, res)
     expect(loginResponse.status).toBeCalledWith(200)
     expect(loginResponse.send).toBeCalledWith(responseTokens)
   })
@@ -92,7 +105,7 @@ describe('Login route', () => {
       status: jest.fn().mockReturnThis(),
     } as any as Response
 
-    const loginResponse = await loginHandler(User, req, res)
+    const loginResponse = await setPetsHandler(User, Pet, req, res)
     expect(loginResponse.status).toBeCalledWith(404)
     expect(loginResponse.send).toBeCalledWith()
   })
@@ -114,7 +127,7 @@ describe('Login route', () => {
       status: jest.fn().mockReturnThis(),
     } as any as Response
 
-    const loginResponse = await loginHandler(User, req, res)
+    const loginResponse = await setPetsHandler(User, Pet, req, res)
     expect(loginResponse.status).toBeCalledWith(401)
     expect(loginResponse.send).toBeCalledWith()
   })
@@ -132,7 +145,7 @@ describe('Login route', () => {
       status: jest.fn().mockReturnThis(),
     } as any as Response
 
-    const loginResponse = await loginHandler(User, req, res)
+    const loginResponse = await setPetsHandler(User, Pet, req, res)
     expect(loginResponse.status).toBeCalledWith(400)
     expect(loginResponse.send).toBeCalledWith()
   })
@@ -150,7 +163,7 @@ describe('Login route', () => {
       status: jest.fn().mockReturnThis(),
     } as any as Response
 
-    const loginResponse = await loginHandler(User, req, res)
+    const loginResponse = await setPetsHandler(User, Pet, req, res)
     expect(loginResponse.status).toBeCalledWith(400)
     expect(loginResponse.send).toBeCalledWith()
   })
@@ -171,7 +184,7 @@ describe('Login route', () => {
       status: jest.fn().mockReturnThis(),
     } as any as Response
 
-    const loginResponse = await loginHandler(User, req, res)
+    const loginResponse = await setPetsHandler(User, Pet, req, res)
     expect(loginResponse.status).toBeCalledWith(500)
     expect(loginResponse.send).toBeCalledWith({
       message: errorMsg,
