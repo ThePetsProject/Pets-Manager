@@ -1,8 +1,7 @@
 import { UserType } from '@src/infrastructure/database/models/user'
 import { Router } from 'express'
 import mongoose from 'mongoose'
-import { Request, Response } from 'express'
-import { get, set } from 'lodash'
+import { Response } from 'express'
 import { LostPetType } from '@src/infrastructure/database/models/lost-pet'
 
 export type GetLostPetsRouteFnType = (

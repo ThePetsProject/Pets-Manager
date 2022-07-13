@@ -17,11 +17,11 @@ export const setPetsHandler = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  console.log(req)
   const petData: PetType = get(req, 'body.petData', undefined)
-  const email = get(req, 'decoded.email', undefined)
+  const email = get(req, 'body.decoded.email', undefined)
 
-  if (!(petData || email)) return res.sendStatus(400)
+  if (!(petData && Object.keys(petData).length && email?.length))
+    return res.sendStatus(400)
 
   const foundUser = await user.findOne(
     { email },
@@ -47,8 +47,7 @@ export const setPetsHandler = async (
 
     return res.status(201).send({})
   } catch (error: any) {
-    console.log(error)
-    return res.status(500).send({ code: error.code })
+    return res.sendStatus(500)
   }
 }
 

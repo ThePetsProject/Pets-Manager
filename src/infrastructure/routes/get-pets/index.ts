@@ -17,9 +17,9 @@ export const getPetsHandler = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const email = get(req, 'decoded.email', undefined)
+  const email = get(req, 'body.decoded.email', undefined)
 
-  if (!(email || email.length)) return res.sendStatus(401)
+  if (!email?.length) return res.sendStatus(401)
 
   const foundUser = await user.findOne(
     { email },

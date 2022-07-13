@@ -4,30 +4,35 @@ import * as setPetModules from '.'
 import { User } from '../../database/models/user'
 import { Pet } from '../../database/models/pet'
 import { NextFunction, Request, Response } from 'express'
-import axios, { AxiosError, AxiosRequestConfig } from 'axios'
-import validateJwt from '@src/infrastructure/middlewares/jwt'
-import { set } from 'lodash'
 
-jest.mock('axios')
-const mockedAxios = axios as jest.Mocked<typeof axios>
+jest.mock('../../../infrastructure/middlewares/jwt', () => ({
+  validateJWT: (req: Request, res: Response, next: NextFunction) => {
+    return next()
+  },
+}))
 
-const baseRoute = '/api/v1/pets/secure'
 const { setPetsHandler } = setPetModules
 
 jest.spyOn(global.console, 'error').mockImplementation(() => {})
 jest.spyOn(global.console, 'info').mockImplementation(() => {})
 
-const responseTokens = {
-  accToken: 'fakeacctoken',
-  refToken: 'fakereftoken',
+const mockPetData = {
+  accountId: 'fake',
+  microchipId: 'fake',
+  name: 'fake',
+  color: 'fake',
+  age: 'fake',
+  species: 'fake',
+  breed: 'fake',
+  size: 'fake',
+  description: 'fake',
 }
-const mockTokensResponse = () =>
-  mockedAxios.request.mockImplementation(
-    (config: AxiosRequestConfig<unknown>) => {
-      console.log(config)
-      return Promise.resolve()
-    }
-  )
+
+const mockRes = {
+  send: jest.fn().mockReturnThis(),
+  status: jest.fn().mockReturnThis(),
+  sendStatus: jest.fn().mockReturnThis(),
+} as any as Response
 
 describe('Set pet route', () => {
   let request: supertest.SuperTest<supertest.Test>
@@ -36,158 +41,132 @@ describe('Set pet route', () => {
     request = supertest(app)
   })
 
-  beforeEach(() => {
-    User.findOne = jest.fn().mockResolvedValueOnce({
-      checkPassword: jest.fn().mockResolvedValueOnce(true),
-    })
-  })
+  beforeEach(() => {})
 
   afterEach(() => {
-    jest.resetAllMocks()
+    jest.restoreAllMocks()
   })
 
-  it.only('Should call method when root path', (done) => {
-    jest.spyOn(setPetModules, 'setPetsHandler')
-    mockTokensResponse()
+  it('Should respond 201 when pet is saved', async () => {
+    User.findOne = jest.fn().mockResolvedValueOnce({
+      _id: 'fakeUserId',
+    })
 
-    request
-      .post(`${baseRoute}/`)
-      .send({
-        accountId: 'fake',
-        microchipId: 'fake',
-        name: 'fake',
-        color: 'fake',
-        age: 'fake',
-        species: 'fake',
-        breed: 'fake',
-        size: 'fake',
-        description: 'fake',
-      })
-      .expect(200)
-      .then(() => {
-        expect(setPetModules.setPetsHandler).toHaveBeenCalled()
-        done()
-      })
-  })
+    Pet.create = jest.fn().mockResolvedValueOnce({})
 
-  it('Should respond 200 when password match', async () => {
-    mockTokensResponse()
-
-    const req = {
+    let req = {
       body: {
-        email: 'fake@email.com',
-        password: 'fakepwd',
+        petData: mockPetData,
+        decoded: {
+          email: 'fake@email.com',
+        },
       },
     } as Request
 
-    const res = {
-      send: jest.fn().mockReturnThis(),
-      status: jest.fn().mockReturnThis(),
-    } as any as Response
-
-    const loginResponse = await setPetsHandler(User, Pet, req, res)
-    expect(loginResponse.status).toBeCalledWith(200)
-    expect(loginResponse.send).toBeCalledWith(responseTokens)
+    const loginResponse = await setPetsHandler(User, Pet, req, mockRes)
+    expect(loginResponse.status).toBeCalledWith(201)
+    expect(loginResponse.send).toBeCalledWith({})
   })
 
-  it('Should respond 404 when no user found', async () => {
+  it('Should respond 500 when pet is not saved', async () => {
+    User.findOne = jest.fn().mockResolvedValueOnce({
+      _id: 'fakeUserId',
+    })
+
+    Pet.create = jest.fn().mockResolvedValueOnce(undefined)
+
+    let req = {
+      body: {
+        petData: mockPetData,
+        decoded: {
+          email: 'fake@email.com',
+        },
+      },
+    } as Request
+
+    const loginResponse = await setPetsHandler(User, Pet, req, mockRes)
+    expect(loginResponse.status).toBeCalledWith(500)
+    expect(loginResponse.send).toBeCalledWith(undefined)
+  })
+
+  it('Should respond 500 when saving pet throws an error', async () => {
+    User.findOne = jest.fn().mockResolvedValueOnce({
+      _id: 'fakeUserId',
+    })
+
+    Pet.create = jest.fn().mockRejectedValueOnce(new Error('errorMessage'))
+
+    let req = {
+      body: {
+        petData: mockPetData,
+        decoded: {
+          email: 'fake@email.com',
+        },
+      },
+    } as Request
+
+    const loginResponse = await setPetsHandler(User, Pet, req, mockRes)
+    expect(loginResponse.sendStatus).toBeCalledWith(500)
+  })
+
+  it('Should respond 400 when no pet data is sent', async () => {
     User.findOne = jest.fn().mockResolvedValueOnce(undefined)
 
     const req = {
       body: {
-        email: 'fake@email.com',
-        password: 'fakepwd',
+        decoded: {
+          email: 'fake@email.com',
+        },
       },
     } as Request
 
-    const res = {
-      send: jest.fn().mockReturnThis(),
-      status: jest.fn().mockReturnThis(),
-    } as any as Response
-
-    const loginResponse = await setPetsHandler(User, Pet, req, res)
-    expect(loginResponse.status).toBeCalledWith(404)
-    expect(loginResponse.send).toBeCalledWith()
+    const loginResponse = await setPetsHandler(User, Pet, req, mockRes)
+    expect(loginResponse.sendStatus).toBeCalledWith(400)
   })
 
-  it('Should respond 401 when passwords wont match', async () => {
-    User.findOne = jest.fn().mockResolvedValueOnce({
-      checkPassword: jest.fn().mockResolvedValueOnce(false),
-    })
+  it('Should respond 400 when no email is sent', async () => {
+    User.findOne = jest.fn().mockResolvedValueOnce(undefined)
 
     const req = {
       body: {
-        email: 'fake@email.com',
-        password: 'fakepwd',
+        petData: mockPetData,
+        decoded: {},
       },
     } as Request
 
-    const res = {
-      send: jest.fn().mockReturnThis(),
-      status: jest.fn().mockReturnThis(),
-    } as any as Response
-
-    const loginResponse = await setPetsHandler(User, Pet, req, res)
-    expect(loginResponse.status).toBeCalledWith(401)
-    expect(loginResponse.send).toBeCalledWith()
+    const loginResponse = await setPetsHandler(User, Pet, req, mockRes)
+    expect(loginResponse.sendStatus).toBeCalledWith(400)
   })
 
-  it('Should respond 400 if passsword is not a string', async () => {
-    const req = {
-      body: {
-        email: 'fake@email.com',
-        password: 123,
-      },
-    } as Request
-
-    const res = {
-      send: jest.fn().mockReturnThis(),
-      status: jest.fn().mockReturnThis(),
-    } as any as Response
-
-    const loginResponse = await setPetsHandler(User, Pet, req, res)
-    expect(loginResponse.status).toBeCalledWith(400)
-    expect(loginResponse.send).toBeCalledWith()
-  })
-
-  it('Should respond 400 if email is not an email', async () => {
-    const req = {
-      body: {
-        email: 'notanemail.com',
-        password: 'fakepwd',
-      },
-    } as Request
-
-    const res = {
-      send: jest.fn().mockReturnThis(),
-      status: jest.fn().mockReturnThis(),
-    } as any as Response
-
-    const loginResponse = await setPetsHandler(User, Pet, req, res)
-    expect(loginResponse.status).toBeCalledWith(400)
-    expect(loginResponse.send).toBeCalledWith()
-  })
-
-  it('Should respond 500 if axios returns error', async () => {
-    const errorMsg = 'Error message'
-    mockedAxios.request.mockRejectedValueOnce(new Error(errorMsg) as AxiosError)
+  it('Should respond 400 when pet data is empty', async () => {
+    User.findOne = jest.fn().mockResolvedValueOnce(undefined)
 
     const req = {
       body: {
-        email: 'fake@email.com',
-        password: 'fakepwd',
+        petData: {},
+        decoded: {
+          email: 'fake@email.com',
+        },
       },
     } as Request
 
-    const res = {
-      send: jest.fn().mockReturnThis(),
-      status: jest.fn().mockReturnThis(),
-    } as any as Response
+    const loginResponse = await setPetsHandler(User, Pet, req, mockRes)
+    expect(loginResponse.sendStatus).toBeCalledWith(400)
+  })
 
-    const loginResponse = await setPetsHandler(User, Pet, req, res)
-    expect(loginResponse.status).toBeCalledWith(500)
-    expect(loginResponse.send).toBeCalledWith({
-      message: errorMsg,
-    })
+  it('Should respond 404 when user not found', async () => {
+    User.findOne = jest.fn().mockResolvedValueOnce(undefined)
+
+    const req = {
+      body: {
+        petData: mockPetData,
+        decoded: {
+          email: 'fake@email.com',
+        },
+      },
+    } as Request
+
+    const loginResponse = await setPetsHandler(User, Pet, req, mockRes)
+    expect(loginResponse.sendStatus).toBeCalledWith(404)
   })
 })

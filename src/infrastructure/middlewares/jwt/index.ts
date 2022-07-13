@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from 'express'
 import axios, { AxiosRequestConfig } from 'axios'
 import { get, set } from 'lodash'
 
-const validateJWT = (req: Request, res: Response, next: NextFunction) => {
+export const validateJWT = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const jwtUrl = `${process.env.JWT_MANAGER_URL}/${process.env.JWT_MANAGER_VALIDATE_PATH}`
 
   const authHeader = req.headers['authorization']
@@ -24,10 +28,8 @@ const validateJWT = (req: Request, res: Response, next: NextFunction) => {
     .request(axiosConfig)
     .then((response) => {
       const email = get(response, 'data.email', '')
-      set(req, 'decoded.email', email)
+      set(req, 'body.decoded.email', email)
       return next()
     })
     .catch(() => res.sendStatus(401))
 }
-
-export default validateJWT

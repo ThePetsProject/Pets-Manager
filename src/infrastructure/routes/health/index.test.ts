@@ -4,21 +4,27 @@ import * as healthMethods from '.'
 import projectProperties from '@utils/project_properties'
 import { Response } from 'express'
 
-const baseRoute = '/api/v1/account/login'
 const { formatTime, healthHandler } = healthMethods
 
 describe('Health route', () => {
   let request: supertest.SuperTest<supertest.Test>
+  const env = process.env
 
   beforeAll(() => {
+    jest.resetModules()
     request = supertest(app)
+    process.env = { ...env }
+  })
+  afterEach(() => {
+    process.env = env
   })
 
   it('Should call route with /health path', (done) => {
+    process.env.ENV = 'TEST'
     jest.spyOn(healthMethods, 'healthHandler')
 
     request
-      .get(`${baseRoute}/health`)
+      .get('/api/v1/pets/health')
       .expect(200)
       .then((response) => {
         const { body } = response
@@ -59,12 +65,12 @@ describe('Health route', () => {
 describe('Format time', (): void => {
   let timeFormat: string
   const timeLessOptions = [
-    { value: 3300, expected: '01:00:00' },
+    { value: 3600, expected: '01:00:00' },
     { value: 60, expected: '00:01:00' },
     { value: 1, expected: '00:00:01' },
   ]
   const timeGreaterOptions = [
-    { value: 33000, expected: '10:00:00' },
+    { value: 36000, expected: '10:00:00' },
     { value: 600, expected: '00:10:00' },
     { value: 10, expected: '00:00:10' },
   ]

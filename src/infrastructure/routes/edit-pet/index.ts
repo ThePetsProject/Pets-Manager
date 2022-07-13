@@ -16,9 +16,10 @@ export const editPetsHandler = async (
   res: Response
 ): Promise<Response> => {
   const petData: PetType = get(req, 'body.petData', undefined)
-  const email = get(req, 'decoded.email', undefined)
+  const email = get(req, 'body.decoded.email', undefined)
 
-  if (!(petData || email)) return res.sendStatus(400)
+  if (!(petData && Object.keys(petData).length && email?.length))
+    return res.sendStatus(400)
 
   const { microchipId } = petData
 
@@ -29,7 +30,7 @@ export const editPetsHandler = async (
     }
   )
 
-  if (!updatedPet) return res.sendStatus(404)
+  if (!updatedPet) return res.sendStatus(500)
 
   return res.status(200).send({})
 }

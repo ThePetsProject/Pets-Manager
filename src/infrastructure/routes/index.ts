@@ -7,7 +7,7 @@ import { editPetsRoute } from './edit-pet'
 import { Breed } from '../database/models/breed'
 import { LostPet } from '../database/models/lost-pet'
 import { getBreedsRoute } from './get-breeds'
-import { setLostPetsRoute } from './set-lost-pet'
+import { setLostPetRoute } from './set-lost-pet'
 import { getLostPetsRoute } from './get-lost-pet'
 
 /**
@@ -22,6 +22,6 @@ export const routesArray = (router: Router) => [
 
 export const routesArrayNosecure = (router: Router) => [
   getBreedsRoute(router, Breed),
-  setLostPetsRoute(router, LostPet),
+  setLostPetRoute(router, LostPet),
   getLostPetsRoute(router, LostPet),
 ]

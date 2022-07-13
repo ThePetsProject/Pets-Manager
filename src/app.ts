@@ -3,11 +3,7 @@ import cors, { CorsOptions } from 'cors'
 import { routesArray, routesArrayNosecure } from './infrastructure/routes'
 import dotenv from 'dotenv'
 import { healthRoute } from './infrastructure/routes/health'
-import validateJWT from './infrastructure/middlewares/jwt'
-import { getBreedsRoute } from './infrastructure/routes/get-breeds'
-import { Breed } from '@database/models/breed'
-import { setLostPetsRoute } from './infrastructure/routes/set-lost-pet'
-import { LostPet } from './infrastructure/database/models/lost-pet'
+import { validateJWT } from './infrastructure/middlewares/jwt'
 
 declare global {
   namespace Express {
