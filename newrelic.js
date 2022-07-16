@@ -9,7 +9,7 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name: ['jwt-manager'],
+  app_name: ['pets-manager'],
   /**
    * Your New Relic license key.
    */
