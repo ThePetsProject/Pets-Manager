@@ -19,11 +19,11 @@ const app = express()
 const router = express.Router()
 
 const corsOptions: CorsOptions = {
-  origin: process.env.ENV === 'PRODUCTION' ? 'https://thepetsproject.tk' : '*',
+  origin: process.env.ENV === 'PRODUCTION' ? 'https://thepetsproject.org' : '*',
   optionsSuccessStatus: 200,
 }
 
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
