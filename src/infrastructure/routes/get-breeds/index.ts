@@ -1,8 +1,6 @@
-import { UserType } from '@src/infrastructure/database/models/user'
 import { Router } from 'express'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
-import { get } from 'lodash'
 import { BreedType } from '@src/infrastructure/database/models/breed'
 
 export type GetBreedsRouteFnType = (
@@ -15,21 +13,30 @@ export const getBreedsHandler = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const breeds = await breed.aggregate([
-    {
-      $group: {
-        _id: '$specie',
-        breeds: {
-          $push: {
-            breedId: '$breedId',
-            breedName: '$breedName',
+  try {
+    const breeds = await breed.aggregate([
+      {
+        $group: {
+          _id: '$specie',
+          breeds: {
+            $push: {
+              breedId: '$breedId',
+              breedName: '$breedName',
+            },
           },
         },
       },
-    },
-  ])
+    ])
 
-  return res.status(200).send(breeds)
+    console.log(`[PETS-MANAGER][BREEDS] Got breeds`)
+
+    return res.status(200).send(breeds)
+  } catch (error) {
+    console.log(
+      `[PETS-MANAGER][BREEDS][ERROR] Error getting breeds. ${error.message}`
+    )
+    return res.sendStatus(500)
+  }
 }
 
 export const getBreedsRoute: GetBreedsRouteFnType = (
