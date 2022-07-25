@@ -32,9 +32,13 @@ export const getBreedsHandler = async (
 
     return res.status(200).send(breeds)
   } catch (error) {
-    console.log(
-      `[PETS-MANAGER][BREEDS][ERROR] Error getting breeds. ${error.message}`
-    )
+    if (error instanceof Error) {
+      console.error(
+        `[PETS-MANAGER][BREEDS][ERROR] Error getting breeds. ${error.message}`
+      )
+    } else {
+      console.error(`[PETS-MANAGER][BREEDS][ERROR] Error getting breeds`, error)
+    }
     return res.sendStatus(500)
   }
 }
