@@ -59,7 +59,7 @@ spec:
             value: PRODUCTION
           - name: PORT
             value: "3300"
-          - name: MONGO_STRING_FILE_PATH
+          - name: VAULT_SECRETS_FILE_PATH
             value: /vault/secrets/
           - name: JWT_MANAGER_URL
             value: http://jwt-manager-service
